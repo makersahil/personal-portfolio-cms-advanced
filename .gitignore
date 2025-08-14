@@ -1,0 +1,28 @@
+'GIT'
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+dist/
+coverage/
+
+# Env
+.env
+.env.*.local
+.env.local
+
+# Prisma cache
+.prisma/
+.prisma/**
+
+# Logs
+logs/
+*.log
+
+# Editor/OS
+.DS_Store
+.idea/
+.vscode/
+GIT+
