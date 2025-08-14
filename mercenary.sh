@@ -1,0 +1,7 @@
+cat > .husky/pre-commit <<'SH'
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+npx lint-staged
+SH
+chmod +x .husky/pre-commit
