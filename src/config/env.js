@@ -8,6 +8,14 @@ const EnvSchema = z.object({
   JWT_ACCESS_SECRET: z.string().min(10, 'JWT_ACCESS_SECRET too short'),
   JWT_REFRESH_SECRET: z.string().min(10, 'JWT_REFRESH_SECRET too short'),
   CORS_ORIGINS: z.string().default('*'), // comma-separated or "*"
+  RATE_LIMIT_GLOBAL: z.coerce.number().int().default(300),
+  RATE_LIMIT_AUTH: z.coerce.number().int().default(10),
+  BODY_LIMIT: z.coerce.number().int().default(1048576),
+  HSTS_ENABLED: z
+    .string()
+    .optional()
+    .transform((v) => String(v || '').toLowerCase() === 'true'),
+  JWT_ACCESS_SECRET_PREV: z.string().optional().default(''),
 });
 
 const parsed = EnvSchema.safeParse(process.env);

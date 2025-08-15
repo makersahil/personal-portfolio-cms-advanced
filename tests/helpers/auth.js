@@ -5,7 +5,7 @@ import prisma from './prisma.js';
 // Create or upsert an admin and get a JWT via /login
 export async function ensureAdminAndToken(
   app,
-  { email = 'admin@test.local', password = 'admin@password', role = 'admin' } = {}
+  { email = 'sahilkgupta@gmail.com', password = 'Sahil@@123', role = 'admin' } = {}
 ) {
   const passwordHash = await bcrypt.hash(password, 10);
 
