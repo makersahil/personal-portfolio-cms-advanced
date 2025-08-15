@@ -1,26 +1,22 @@
 import pino from 'pino';
 
-export function createLogger() {
-  const isProd = process.env.NODE_ENV === 'production';
-  return pino({
-    level: isProd ? 'info' : 'debug',
-    redact: {
-      paths: [
-        'req.headers.authorization',
-        'request.headers.authorization',
-        'headers.authorization',
-        'password',
-        '*.password',
-        'token',
-        '*.token',
-      ],
-      censor: '[REDACTED]',
-    },
-    base: undefined,
-    formatters: {
-      level(label) {
-        return { level: label };
-      },
-    },
-  });
-}
+import env from './env.js';
+
+const redact = {
+  paths: [
+    'req.headers.authorization',
+    'req.headers.cookie',
+    'req.headers["set-cookie"]',
+    'response.headers["set-cookie"]',
+    'password',
+    'token',
+  ],
+  remove: true,
+};
+
+export const loggerOptions = {
+  level: env.NODE_ENV === 'production' ? 'info' : 'debug',
+  redact,
+  base: null, // no pid/hostname
+  timestamp: pino.stdTimeFunctions.isoTime,
+};

@@ -17,6 +17,7 @@ import patentsAdminRoutes from '../features/patents/patents.admin.route.js';
 import certificationsAdminRoutes from '../features/certifications/certifications.admin.route.js';
 
 import healthRoutes from './health.route.js';
+import metricsRoute from './metrics.route.js';
 
 /**
  * Central route hub.
@@ -98,6 +99,13 @@ export default fp(async (app) => {
       api.register(profileAdminRoutes);
     },
     { prefix: '/api/v1/admin/profile' }
+  );
+
+  app.register(
+    async (api) => {
+      api.register(metricsRoute);
+    },
+    { prefix: '/api/v1/metrics' }
   );
 
   app.register(

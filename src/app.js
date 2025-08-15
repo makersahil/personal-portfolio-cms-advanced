@@ -1,26 +1,60 @@
 // src/app.js
+import { randomUUID } from 'node:crypto';
+
 import Fastify from 'fastify';
 import rateLimit from '@fastify/rate-limit';
 
-import { createLogger } from './config/logger.js';
+import { loggerOptions } from './config/logger.js';
 import env from './config/env.js';
 import corsPlugin from './plugins/cors.js';
 import jwtPlugin from './plugins/jwt.js';
 import routes from './routes/index.js';
+import metricsRoute from './routes/metrics.route.js';
+import {
+  httpRequestsTotal,
+  httpRequestDurationSeconds,
+  routeLabel,
+} from './observability/metrics.js';
 import errorHandler from './plugins/error-handler.js';
 
-export function buildApp(opts = {}) {
+export async function buildApp(opts = {}) {
   const app = Fastify({
-    loggerInstance: createLogger(),
-    genReqId(req) {
-      return (
-        req.headers['x-request-id'] ||
-        `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`
-      );
-    },
+    logger: opts.logger ?? loggerOptions, // ✅ use the instance
+    disableRequestLogging: true,
     requestIdHeader: 'x-request-id',
-    requestIdLogLabel: 'reqId',
-    ...opts,
+    genReqId: (req) => req.headers['x-request-id'] || randomUUID(),
+  });
+
+  // Annotate responses with x-request-id
+  app.addHook('onRequest', async (req, reply) => {
+    if (req.id) reply.header('x-request-id', req.id);
+    // store high-res start time for metrics
+    req._startAt = process.hrtime.bigint();
+  });
+
+  app.addHook('onResponse', async (req, reply) => {
+    const start = req._startAt || process.hrtime.bigint();
+    const durSec = Number(process.hrtime.bigint() - start) / 1e9;
+    const route = routeLabel(req);
+    const method = req.method;
+    const status = String(reply.statusCode);
+
+    // metrics
+    httpRequestsTotal.inc({ method, route, status });
+    httpRequestDurationSeconds.observe({ method, route, status }, durSec);
+
+    // structured info log
+    app.log.info(
+      {
+        reqId: req.id,
+        method,
+        route,
+        url: req.url,
+        statusCode: reply.statusCode,
+        durationMs: Math.round(durSec * 1000),
+      },
+      'request completed'
+    );
   });
 
   // Core plugins
