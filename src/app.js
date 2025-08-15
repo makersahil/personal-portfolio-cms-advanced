@@ -9,7 +9,7 @@ import env from './config/env.js';
 import corsPlugin from './plugins/cors.js';
 import jwtPlugin from './plugins/jwt.js';
 import routes from './routes/index.js';
-import metricsRoute from './routes/metrics.route.js';
+// import openapiPlugin from './docs/openapi.plugin.js';
 import {
   httpRequestsTotal,
   httpRequestDurationSeconds,
@@ -56,6 +56,8 @@ export async function buildApp(opts = {}) {
       'request completed'
     );
   });
+
+  // await app.register(openapiPlugin);
 
   // Core plugins
   app.register(corsPlugin);
