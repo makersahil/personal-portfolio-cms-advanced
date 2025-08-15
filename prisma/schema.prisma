@@ -116,6 +116,7 @@ model Publication {
   @@index([year])
   @@index([type])
   @@index([title])
+  @@index([createdAt])
 }
 
 /* =========
@@ -152,6 +153,7 @@ model Patent {
   @@unique([country, patentNo])
   @@index([year])
   @@index([title])
+  @@index([createdAt])
 }
 
 model PatentInventor {
@@ -183,6 +185,7 @@ model ResearchGrant {
 
   @@index([year])
   @@index([title])
+  @@index([createdAt])
 }
 
 /* =========
@@ -201,6 +204,7 @@ model Certification {
 
   @@index([year])
   @@index([title])
+  @@index([createdAt])
 }
 
 

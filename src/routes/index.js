@@ -8,6 +8,7 @@ import grantRoutes from '../features/grants/grants.route.js';
 import patentRoutes from '../features/patents/patents.route.js';
 import profileRoutes from '../features/profile/profile.route.js';
 import certificationRoutes from '../features/certifications/certifications.route.js';
+import searchRoutes from '../features/search/search.route.js';
 import profileAdminRoutes from '../features/profile/profile.admin.route.js';
 import articlesAdminRoutes from '../features/articles/articles.admin.route.js';
 import publicationsAdminRoutes from '../features/publications/publications.admin.route.js';
@@ -81,6 +82,14 @@ export default fp(async (app) => {
       api.register(certificationRoutes);
     },
     { prefix: '/api/v1/certifications' }
+  );
+
+  app.register(
+    async (api) => {
+      // /api/v1/auth/*
+      api.register(searchRoutes);
+    },
+    { prefix: '/api/v1/search' }
   );
 
   app.register(
