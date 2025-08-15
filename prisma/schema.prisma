@@ -1,4 +1,4 @@
-// prisma/schema.prisma
+// Prisma Client
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,10 +8,211 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+/* =========
+   Core Auth
+   ========= */
 model Admin {
   id           String   @id @default(uuid())
   email        String   @unique
   passwordHash String
   role         String   @default("admin")
   createdAt    DateTime @default(now())
+}
+
+/* =========
+   Profile
+   ========= */
+model Profile {
+  id           String   @id @default(uuid())
+  name         String
+  title        String
+  bio          String
+  avatarUrl    String?
+  contactEmail String?
+  phone        String?
+  socials      Json?
+  published    Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([updatedAt])
+}
+
+/* =========
+   Authors & Articles
+   ========= */
+model Author {
+  id          String   @id @default(uuid())
+  firstName   String
+  lastName    String
+  affiliation String?
+  email       String?
+  orcid       String?
+  slug        String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  articles ArticleAuthor[]
+  @@index([lastName, firstName])
+}
+
+model Article {
+  id            String   @id @default(uuid())
+  title         String
+  abstract      String?
+  journal       String
+  year          Int
+  doi           String?
+  link          String?
+  slug          String   @unique
+  tags          String[] @default([])
+  legacyAuthors String?
+  published     Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  authors ArticleAuthor[]
+
+  @@index([year])
+  @@index([createdAt])
+  @@index([title])
+}
+
+model ArticleAuthor {
+  articleId String
+  authorId  String
+  position  Int
+
+  article Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  author  Author  @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@id([articleId, authorId])
+  @@unique([articleId, position])
+}
+
+/* =========
+   Publications
+   ========= */
+enum PublicationType {
+  Book
+  Conference
+  Chapter
+}
+
+model Publication {
+  id          String           @id @default(uuid())
+  title       String
+  description String
+  publisher   String?
+  type        PublicationType
+  year        Int
+  link        String?
+  slug        String           @unique
+  tags        String[]         @default([])
+  published   Boolean          @default(true)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@index([year])
+  @@index([type])
+  @@index([title])
+}
+
+/* =========
+   Patents & Inventors
+   ========= */
+model Inventor {
+  id          String   @id @default(uuid())
+  firstName   String
+  lastName    String
+  affiliation String?
+  slug        String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  patents PatentInventor[]
+  @@index([lastName, firstName])
+}
+
+model Patent {
+  id              String   @id @default(uuid())
+  title           String
+  country         String
+  patentNo        String
+  year            Int
+  link            String?
+  slug            String   @unique
+  legacyInventors String?
+  published       Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  inventors PatentInventor[]
+
+  @@unique([country, patentNo])
+  @@index([year])
+  @@index([title])
+}
+
+model PatentInventor {
+  patentId String
+  inventorId String
+  position Int
+
+  patent   Patent   @relation(fields: [patentId], references: [id], onDelete: Cascade)
+  inventor Inventor @relation(fields: [inventorId], references: [id], onDelete: Cascade)
+
+  @@id([patentId, inventorId])
+  @@unique([patentId, position])
+}
+
+/* =========
+   Research Grants
+   ========= */
+model ResearchGrant {
+  id        String   @id @default(uuid())
+  title     String
+  summary   String
+  year      Int
+  amount    Int?
+  link      String?
+  slug      String   @unique
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([year])
+  @@index([title])
+}
+
+/* =========
+   Certifications
+   ========= */
+model Certification {
+  id        String   @id @default(uuid())
+  title     String
+  issuer    String
+  year      Int
+  link      String?
+  slug      String   @unique
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([year])
+  @@index([title])
+}
+
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  actorId   String?
+  action    String      // 'CREATE' | 'UPDATE' | 'DELETE'
+  entity    String      // e.g., 'Article', 'Publication', ...
+  entityId  String?
+  before    Json?
+  after     Json?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
 }
