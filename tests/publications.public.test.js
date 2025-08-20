@@ -14,12 +14,12 @@ afterAll(async () => {
 
 describe('Publications (public)', () => {
   it('list -> filtered by type', async () => {
-    const res = await app.inject({ method: 'GET', url: '/api/v1/publications?type=Book' });
+    const res = await app.inject({ method: 'GET', url: '/publications?type=Book' });
     expect(res.statusCode).toBe(200);
   });
 
   it('detail -> by slug', async () => {
-    const res = await app.inject({ method: 'GET', url: `/api/v1/publications/${pub.slug}` });
+    const res = await app.inject({ method: 'GET', url: `/publications/${pub.slug}` });
     expect(res.statusCode).toBe(200);
   });
 });

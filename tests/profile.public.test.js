@@ -14,7 +14,7 @@ afterAll(async () => {
 
 describe('Profile (public)', () => {
   it('GET /profile -> returns latest published profile', async () => {
-    const res = await app.inject({ method: 'GET', url: '/api/v1/profile' });
+    const res = await app.inject({ method: 'GET', url: '/profile' });
     expect(res.statusCode).toBe(200);
     const body = res.json();
     expect(body.success).toBe(true);

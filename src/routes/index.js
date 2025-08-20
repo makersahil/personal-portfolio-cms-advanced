@@ -42,7 +42,7 @@ export default fp(async (app) => {
       // /api/v1/auth/*
       api.register(profileRoutes);
     },
-    { prefix: '/api/v1/profile' }
+    { prefix: '/profile' }
   );
 
   app.register(
@@ -50,7 +50,7 @@ export default fp(async (app) => {
       // /api/v1/auth/*
       api.register(articleRoutes);
     },
-    { prefix: '/api/v1/articles' }
+    { prefix: '/articles' }
   );
 
   app.register(
@@ -58,7 +58,7 @@ export default fp(async (app) => {
       // /api/v1/auth/*
       api.register(publicationRoutes);
     },
-    { prefix: '/api/v1/publications' }
+    { prefix: '/publications' }
   );
 
   app.register(
@@ -66,7 +66,7 @@ export default fp(async (app) => {
       // /api/v1/auth/*
       api.register(grantRoutes);
     },
-    { prefix: '/api/v1/grants' }
+    { prefix: '/grants' }
   );
 
   app.register(
@@ -74,7 +74,7 @@ export default fp(async (app) => {
       // /api/v1/auth/*
       api.register(patentRoutes);
     },
-    { prefix: '/api/v1/patents' }
+    { prefix: '/patents' }
   );
 
   app.register(
@@ -82,7 +82,7 @@ export default fp(async (app) => {
       // /api/v1/auth/*
       api.register(certificationRoutes);
     },
-    { prefix: '/api/v1/certifications' }
+    { prefix: '/certifications' }
   );
 
   app.register(
@@ -105,7 +105,7 @@ export default fp(async (app) => {
     async (api) => {
       api.register(metricsRoute);
     },
-    { prefix: '/api/v1/metrics' }
+    { prefix: '/api/v1/metrics' } // may need to be edited
   );
 
   app.register(

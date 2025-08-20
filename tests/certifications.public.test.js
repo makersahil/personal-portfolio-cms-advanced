@@ -16,13 +16,13 @@ describe('Certifications (public)', () => {
   it('list -> ok', async () => {
     const res = await app.inject({
       method: 'GET',
-      url: '/api/v1/certifications?page=1&pageSize=5',
+      url: '/certifications?page=1&pageSize=5',
     });
     expect(res.statusCode).toBe(200);
   });
 
   it('detail -> by slug', async () => {
-    const res = await app.inject({ method: 'GET', url: `/api/v1/certifications/${cert.slug}` });
+    const res = await app.inject({ method: 'GET', url: `/certifications/${cert.slug}` });
     expect(res.statusCode).toBe(200);
   });
 });

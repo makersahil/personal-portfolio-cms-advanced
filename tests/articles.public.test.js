@@ -21,7 +21,7 @@ describe('Articles (public)', () => {
   it('list -> paginated', async () => {
     const res = await app.inject({
       method: 'GET',
-      url: '/api/v1/articles?page=1&pageSize=5&sort=-year',
+      url: '/articles?page=1&pageSize=5&sort=-year',
     });
     expect(res.statusCode).toBe(200);
     const body = res.json();
@@ -30,7 +30,7 @@ describe('Articles (public)', () => {
   });
 
   it('detail -> by slug', async () => {
-    const res = await app.inject({ method: 'GET', url: `/api/v1/articles/${art.slug}` });
+    const res = await app.inject({ method: 'GET', url: `/articles/${art.slug}` });
     expect(res.statusCode).toBe(200);
     expect(res.json().data.slug).toBe(art.slug);
   });

@@ -14,12 +14,12 @@ afterAll(async () => {
 
 describe('Patents (public)', () => {
   it('list -> query', async () => {
-    const res = await app.inject({ method: 'GET', url: '/api/v1/patents?q=IN' });
+    const res = await app.inject({ method: 'GET', url: '/patents?q=IN' });
     expect(res.statusCode).toBe(200);
   });
 
   it('detail -> by slug', async () => {
-    const res = await app.inject({ method: 'GET', url: `/api/v1/patents/${pat.slug}` });
+    const res = await app.inject({ method: 'GET', url: `/patents/${pat.slug}` });
     expect(res.statusCode).toBe(200);
   });
 });
